@@ -64,18 +64,17 @@ Send once during each voting phase. The candidate must be one of `A`, `B` or `C`
 ```json
 {
   "type": "vote",
-  "round": 1,
   "candidate": "B"
 }
 ```
 
-The server validates the current phase and round, candidate, and duplicate votes. A rejected action produces an `error` event.
+The server derives the voter from the connection and the round from the experiment's current state. It validates the voting phase, candidate, and duplicate votes for that voter and round. A rejected action produces an `error` event.
 
 ## 4. Server-to-client events
 
 ### `state`
 
-Sent to the connecting client and sent to all clients on each phase transition. It drives the four screens: `waiting`, `discussion`, `voting`, and `completed` (results). On a successful vote, send an updated state to that voter; if the vote immediately advances the phase, the next state serves as confirmation.
+Sent individually to the connecting participant and to each connected participant on each phase transition. Each participant receives their own `has_voted` value, not another player's voting status. It drives the four screens: `waiting`, `discussion`, `voting`, and `completed` (results). On a successful vote, send an updated state to that voter; if the vote immediately advances the phase, the next state serves as confirmation.
 
 ```json
 {
@@ -84,7 +83,7 @@ Sent to the connecting client and sent to all clients on each phase transition. 
   "round": 1,
   "players": ["A", "B", "C"],
   "discussion_ends_at": "2026-11-20T21:05:00Z",
-  "has_voted": null,
+  "has_voted": false,
   "messages": [
     {
       "round": 1,
@@ -98,9 +97,25 @@ Sent to the connecting client and sent to all clients on each phase transition. 
 - `players` contains the three neutral labels, not participant types or occupancy information.
 - `round` is null while waiting, `1` or `2` during the experiment, and `2` when completed.
 - `discussion_ends_at` is an ISO 8601 UTC timestamp during discussion and null otherwise; the server controls transitions.
-- `has_voted` is a boolean for the receiving participant during voting and null otherwise.
+- `has_voted` is `true` only when the receiving participant has voted in the current voting round; it is `false` before they vote and outside voting phases. It resets to `false` for the next round.
 - `messages` contains the discussion history so a participant connecting after the phase starts does not miss earlier messages; it is empty before any messages are sent.
 - The server sends a consistent snapshot before subsequent live events on each connection. The client replaces its displayed history with the snapshot and appends later `message` events.
+
+For example, during round-one voting, a participant who has voted receives:
+
+```json
+{
+  "type": "state",
+  "phase": "voting",
+  "round": 1,
+  "players": ["A", "B", "C"],
+  "discussion_ends_at": null,
+  "has_voted": true,
+  "messages": []
+}
+```
+
+In the same phase, a participant who has not voted receives their own state with `has_voted: false`.
 
 ### `message`
 

@@ -11,7 +11,7 @@ This blueprint follows the [original assessment](./technical-assessment-multi-pa
 
 ## 2. Backend responsibilities
 
-- Read `config.yml` and support the three required configurations: 3 humans, 2 humans + 1 AI, and 1 human + 2 AI.
+- Read `config.yml` from the repository root and support the three required configurations: 3 humans, 2 humans + 1 AI, and 1 human + 2 AI.
 - Assign exactly three distinct neutral player identifiers and start when all required humans have joined.
 - Run two approximately one-minute discussion rounds, followed by a vote from each participant in each round.
 - Relay discussion messages and phase changes in real time; enforce phase and voting rules on the server.
@@ -48,7 +48,7 @@ The server begins discussion when the configured human slots are filled and AI s
 
 | WebSocket event | Direction | Purpose |
 |---|---|---|
-| `state` | Server → client | Send the current phase, round, neutral players and relevant timing information on connection and transition. |
+| `state` | Server → client | Send each participant their own state, including phase, round, timing and personal voting status, on connection and transition. |
 | `message` | Client → server → clients | Submit and broadcast a discussion message with its neutral sender. |
 | `vote` | Client → server | Submit one candidate selection for the current voting round. |
 | `result` | Server → clients | Deliver final vote counts and the selected Decision Maker. |
@@ -62,4 +62,4 @@ AI actions occur on the server and use the same participant-visible message and 
 - **Backend:** Python/FastAPI application.
 - **Database:** PostgreSQL or MongoDB.
 
-Docker Compose starts the complete application locally with one command. The repository must include `config.yml`, Docker setup, a concise README covering startup, configuration and key choices, and an AI usage log as specified in the assessment.
+Docker Compose starts the complete application locally with one command. The repository must include `config.yml` at its root, Docker setup, a concise README covering startup, configuration and key choices, and an AI usage log as specified in the assessment.

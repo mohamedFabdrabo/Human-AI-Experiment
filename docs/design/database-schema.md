@@ -38,7 +38,7 @@ Stores a player's neutral identifier and internal type.
 |---|---|---|
 | `id` | integer | Primary key |
 | `experiment_id` | integer | Foreign key to Experiment |
-| `player_label` | text | `A`, `B`, or `C` |
+| `player_label` | text | CHECK: `player_label IN ('A', 'B', 'C')` |
 | `participant_type` | text | `human` or `ai`; internal only |
 
 **Unique:** `(experiment_id, player_label)`. Together with the allowed labels, this limits an experiment to three participants.
@@ -54,6 +54,7 @@ Stores a discussion message, its sender and round.
 | `sender_id` | integer | Foreign key to Participant |
 | `round` | integer | `1` or `2` |
 | `text` | text | Message content |
+| `created_at` | timestamp with time zone | Defaults to the current timestamp |
 
 ### Vote
 

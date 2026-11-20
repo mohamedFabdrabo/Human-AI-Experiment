@@ -71,7 +71,7 @@ This design follows the [implementation blueprint](./implementation-blueprint.md
 - Once the server confirms the vote, disable the choices and show a waiting status.
 - On the next server phase update, show round-two discussion or results as applicable.
 
-**Contract:** Receive `state`, including `has_voted`; send `vote`; receive `error`.
+**Contract:** Receive the participant-specific `state`, including their own boolean `has_voted`; send `vote` with the candidate only; receive `error`. The backend determines the current round.
 
 ## 4. Results screen
 
