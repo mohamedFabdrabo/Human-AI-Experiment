@@ -1,0 +1,6 @@
+participants:
+  - human
+  - human
+  - human
+rounds: 2
+discussion_duration_seconds: 60
