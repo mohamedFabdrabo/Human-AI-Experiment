@@ -2,8 +2,10 @@
 
 The backend loads experiment configuration, initializes the database schema,
 and creates an experiment with three participant slots. `POST /join` assigns
-an available human slot; the remaining experiment flow and WebSockets are not
-implemented yet.
+an available human slot. The backend lifecycle starts when all humans join,
+runs two timed discussions and voting rounds, and computes final results.
+The WebSocket backend supports state updates, discussion messages and voting;
+the experiment UI is not implemented yet.
 
 ## Experiment configuration
 
@@ -18,8 +20,7 @@ one of:
 The backend loads the file at startup. It requires exactly three participants,
 at least one human, exactly two rounds, and a positive integer duration.
 Invalid or missing configuration prevents startup. Compose mounts the file
-read-only; restart the backend after changes. Experiment behavior is not yet
-implemented. Participant types remain server-side.
+read-only; restart the backend after changes. Participant types remain server-side.
 
 ## Run locally
 
@@ -36,7 +37,9 @@ Compose starts PostgreSQL with a named `postgres_data` volume and waits for
 its health check before starting the backend. The backend health endpoint only
 checks that the API is running; it does not check the database. Database
 credentials in the Compose file are for local development only. The backend
-creates missing tables on startup; this does not migrate an existing schema.
+creates missing tables on startup and adds the lifecycle deadline column to
+databases created before it was introduced. Other schema changes require
+manual migrations.
 Each backend startup creates a new waiting experiment and three slots using
 the current configuration. Earlier records remain in the database, but are
 not resumed.
@@ -45,6 +48,23 @@ not resumed.
 token, or HTTP 409 when all human slots are taken. Tokens and slot assignments
 are kept in memory and are lost on restart. The application runs as a single
 backend process; do not share participant tokens.
+Connect to `/ws?token=<participant_token>` for the events described in the
+[communication contract](docs/design/communication-contract.md). The backend
+removes the query string before Uvicorn's handshake log, but reverse proxies
+must also be configured not to log WebSocket query strings. Avoid server or
+WebSocket-library trace/debug logging that records request URLs. Use HTTPS/WSS
+outside local development.
+
+The lifecycle service validates transitions and votes within the caller's
+database transaction. Discussions end after the configured duration (checked
+once per second); voting waits for all three participants. AI participants
+automatically vote for Player A, including themselves if applicable. Only
+round-two votes determine the result, with ties broken in A, B, C order.
+The next discussion starts when the last round-one vote is accepted. No
+voting timeout or recovery of an interrupted experiment is implemented.
+The current scripted AI voting is isolated in `backend/ai/scripted.py`; AI
+discussion messages are not implemented. WebSocket updates are sent directly
+to each connection, so a slow connection can delay other updates.
 
 Stop the services with `docker compose down`. The named volume is retained
 across restarts.

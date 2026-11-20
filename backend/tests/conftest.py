@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 from uuid import uuid4
 
 import pytest
@@ -40,8 +40,9 @@ def startup(
     """Run application startup with a temporary config and isolated database."""
     config_path = tmp_path / "config.yml"
     monkeypatch.setattr(main, "load_config", lambda _: load_config(config_path))
-    monkeypatch.setattr(main, "create_engine", lambda _: Mock())
-    monkeypatch.setattr(main.Base.metadata, "create_all", lambda _: None)
+    engine = MagicMock()
+    engine.begin.return_value.__enter__.return_value = session.connection()
+    monkeypatch.setattr(main, "create_engine", lambda _: engine)
     test_factory = sessionmaker(bind=session.get_bind(), join_transaction_mode="create_savepoint")
     monkeypatch.setattr(main, "sessionmaker", lambda **_: test_factory)
     return config_path

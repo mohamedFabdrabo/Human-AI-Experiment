@@ -3,11 +3,27 @@ from pathlib import Path
 
 import pytest
 from fastapi import FastAPI
-from sqlalchemy import event, select
+from sqlalchemy import DDL, event, select
 from sqlalchemy.orm import Session
 
 import main
+from database import initialize_schema
 from models import Experiment, Participant
+
+
+def test_existing_schema_gets_discussion_deadline(session: Session) -> None:
+    experiment = Experiment(phase="waiting")
+    session.add(experiment)
+    session.flush()
+    connection = session.connection()
+    connection.execute(
+        DDL("ALTER TABLE %(fullname)s DROP COLUMN discussion_ends_at").against(Experiment.__table__)
+    )
+    initialize_schema(connection)
+    initialize_schema(connection)
+    session.refresh(experiment)
+    assert experiment.phase == "waiting"
+    assert experiment.discussion_ends_at is None
 
 
 @pytest.mark.parametrize(

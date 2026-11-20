@@ -70,6 +70,10 @@ Send once during each voting phase. The candidate must be one of `A`, `B` or `C`
 
 The server derives the voter from the connection and the round from the experiment's current state. It validates the voting phase, candidate, and duplicate votes for that voter and round. A rejected action produces an `error` event.
 
+Events containing claimed sender or voter identities are rejected; other
+unknown fields are ignored. Configure reverse proxies not to log WebSocket
+query strings.
+
 ## 4. Server-to-client events
 
 ### `state`

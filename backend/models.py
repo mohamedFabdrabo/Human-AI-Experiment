@@ -21,6 +21,7 @@ class Experiment(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     phase: Mapped[str] = mapped_column(Text)
     current_round: Mapped[int | None]
+    discussion_ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     final_decision_maker_id: Mapped[int | None] = mapped_column(
         ForeignKey("participant.id", name="fk_experiment_final_decision_maker")
     )

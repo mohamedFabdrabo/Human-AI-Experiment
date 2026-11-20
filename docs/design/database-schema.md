@@ -28,6 +28,7 @@ Stores the current lifecycle state and final selection.
 | `id` | integer | Primary key |
 | `phase` | text | `waiting`, `discussion`, `voting`, or `completed` |
 | `current_round` | integer, nullable | `1` or `2`; null while waiting |
+| `discussion_ends_at` | timestamp with time zone, nullable | Discussion deadline; null outside discussion |
 | `final_decision_maker_id` | integer, nullable | Foreign key to Participant; null until completed |
 
 ### Participant
