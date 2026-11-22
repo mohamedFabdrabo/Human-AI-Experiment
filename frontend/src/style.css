@@ -13,3 +13,55 @@ main {
   margin: 4rem auto;
   padding: 0 1.5rem;
 }
+
+section {
+  padding: 1.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: white;
+}
+
+.conversation {
+  min-height: 8rem;
+  max-height: 20rem;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  border: 1px solid #cbd5e1;
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+}
+
+form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+textarea, select, button {
+  font: inherit;
+  padding: 0.5rem;
+}
+
+button {
+  width: fit-content;
+  color: white;
+  background: #1d4ed8;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #64748b;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #991b1b;
+}
+
+@media (max-width: 600px) {
+  main {
+    margin: 1.5rem auto;
+  }
+}

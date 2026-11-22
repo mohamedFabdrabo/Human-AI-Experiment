@@ -5,7 +5,7 @@ and creates an experiment with three participant slots. `POST /join` assigns
 an available human slot. The backend lifecycle starts when all humans join,
 runs two timed discussions and voting rounds, and computes final results.
 The WebSocket backend supports state updates, discussion messages and voting;
-the experiment UI is not implemented yet.
+the frontend provides the waiting room, discussion, voting and results screens.
 
 ## Experiment configuration
 
@@ -33,6 +33,11 @@ docker compose up --build
 - Frontend: http://localhost:5173
 - Backend health check: http://localhost:8000/health (returns `{"status":"ok"}`)
 
+The backend permits browser `POST /join` requests from the local frontend
+origins `http://localhost:5173` and `http://127.0.0.1:5173`. Other frontend
+origins need appropriate CORS configuration or a same-origin proxy.
+The frontend development server proxies `/join` and `/ws` to the backend.
+
 Compose starts PostgreSQL with a named `postgres_data` volume and waits for
 its health check before starting the backend. The backend health endpoint only
 checks that the API is running; it does not check the database. Database
@@ -57,14 +62,15 @@ outside local development.
 
 The lifecycle service validates transitions and votes within the caller's
 database transaction. Discussions end after the configured duration (checked
-once per second); voting waits for all three participants. AI participants
-automatically vote for Player A, including themselves if applicable. Only
+once per second); voting waits for all three participants. Each AI participant
+sends one scripted message at the start of each discussion and automatically
+votes for Player A, including themselves if applicable. Only
 round-two votes determine the result, with ties broken in A, B, C order.
 The next discussion starts when the last round-one vote is accepted. No
 voting timeout or recovery of an interrupted experiment is implemented.
-The current scripted AI voting is isolated in `backend/ai/scripted.py`; AI
-discussion messages are not implemented. WebSocket updates are sent directly
-to each connection, so a slow connection can delay other updates.
+The scripted AI behavior is isolated in `backend/ai/scripted.py`. WebSocket
+updates are sent directly to each connection, so a slow connection can delay
+other updates.
 
 Stop the services with `docker compose down`. The named volume is retained
 across restarts.

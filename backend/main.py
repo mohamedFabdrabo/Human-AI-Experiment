@@ -2,9 +2,11 @@ import asyncio
 import logging
 import secrets
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request, Response, WebSocket, status
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
@@ -71,6 +73,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
+)
 app.add_middleware(HideWebSocketQuery)
 
 
@@ -87,6 +95,7 @@ async def join(request: Request, response: Response) -> JoinResponse:
         while token in state.participant_tokens:
             token = secrets.token_urlsafe(32)
         prepared = []
+        ai_messages = []
         with state.session_factory.begin() as session:
             participants = session.scalars(
                 select(Participant)
@@ -106,13 +115,17 @@ async def join(request: Request, response: Response) -> JoinResponse:
             player, participant_id = participant.player_label, participant.id
             joined_humans = occupied | {participant_id}
             if len(joined_humans) == len(participants):
+                transition_time = datetime.now(timezone.utc)
                 start_experiment(
                     session, state.experiment_id, joined_humans,
-                    state.config.discussion_duration_seconds,
+                    state.config.discussion_duration_seconds, transition_time,
                 )
                 prepared = state.hub.prepare_states(session)
+                ai_messages = state.hub.prepare_ai_messages(session, 1, transition_time)
         state.participant_tokens[token] = participant_id
         await state.hub.publish_states(prepared)
+        for ai_message in ai_messages:
+            await state.hub.publish_message(ai_message)
         response.headers["Cache-Control"] = "no-store"
         return JoinResponse(player=player, participant_token=token)
 

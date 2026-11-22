@@ -1,6 +1,6 @@
 participants:
   - human
-  - human
-  - human
+  - ai
+  - ai
 rounds: 2
 discussion_duration_seconds: 60

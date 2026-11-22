@@ -66,3 +66,25 @@ def test_concurrent_joins_do_not_assign_the_same_slot(startup: Path) -> None:
         assert sorted(response.status_code for response in responses) == [201] * 3 + [409] * 5
         assert {body["player"] for body in accepted} == {"A", "B", "C"}
         assert len({body["participant_token"] for body in accepted}) == 3
+
+
+@pytest.mark.parametrize("origin", ["http://localhost:5173", "http://127.0.0.1:5173"])
+def test_local_frontend_can_join_across_origins(startup: Path, origin: str) -> None:
+    startup.write_text(
+        "participants: [human, human, human]\nrounds: 2\ndiscussion_duration_seconds: 60\n",
+        encoding="utf-8",
+    )
+    with TestClient(main.app) as client:
+        preflight = client.options(
+            "/join",
+            headers={
+                "Origin": origin,
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "content-type",
+            },
+        )
+        assert preflight.status_code == 200
+        assert preflight.headers["access-control-allow-origin"] == origin
+        response = client.post("/join", json={}, headers={"Origin": origin})
+        assert response.status_code == 201
+        assert response.headers["access-control-allow-origin"] == origin

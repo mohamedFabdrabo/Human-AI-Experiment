@@ -1,7 +1,7 @@
 import asyncio
 import json
 import logging
-from datetime import timezone
+from datetime import datetime, timezone
 from typing import Literal
 from urllib.parse import parse_qs
 
@@ -12,6 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 from starlette.types import ASGIApp, Receive, Scope, Send
 
+from ai.scripted import scripted_messages
 from lifecycle import LifecycleError, add_message, advance_discussion, cast_vote, final_results
 from models import Experiment, Message, Participant, Vote
 
@@ -152,6 +153,23 @@ class ExperimentHub:
         for socket in list(self.connections):
             await self._send(socket, event)
 
+    def prepare_ai_messages(self, session: Session, round_number: int, now: datetime) -> list[dict]:
+        participants = session.scalars(
+            select(Participant)
+            .where(Participant.experiment_id == self.experiment_id)
+            .order_by(Participant.player_label)
+        ).all()
+        events = []
+        for participant, text in scripted_messages(participants, round_number):
+            message = add_message(
+                session, self.experiment_id, participant.id, round_number, text, now
+            )
+            events.append({
+                "type": "message", "round": message.round,
+                "sender": participant.player_label, "text": message.text,
+            })
+        return events
+
     async def _advance_due(self) -> None:
         """Advance an expired discussion and publish the resulting state."""
         with self.session_factory.begin() as session:
@@ -247,6 +265,7 @@ class ExperimentHub:
                             "sender": sender.player_label, "text": message.text,
                         }
                     else:
+                        transition_time = datetime.now(timezone.utc)
                         candidate = session.scalar(
                             select(Participant).where(
                                 Participant.experiment_id == self.experiment_id,
@@ -257,7 +276,7 @@ class ExperimentHub:
                             raise LifecycleError("Candidate does not belong to the experiment.")
                         cast_vote(
                             session, self.experiment_id, participant_id, candidate.id,
-                            self.discussion_duration,
+                            self.discussion_duration, transition_time,
                         )
                         experiment = session.get(Experiment, self.experiment_id)
                         if experiment is None:
@@ -266,10 +285,16 @@ class ExperimentHub:
                         prepared = self.prepare_states(
                             session, None if phase_changed else participant_id
                         )
+                        ai_messages = (
+                            self.prepare_ai_messages(session, 2, transition_time)
+                            if experiment.phase == "discussion" else []
+                        )
                 if isinstance(action, MessageAction):
                     await self.publish_message(event)
                 else:
                     await self.publish_states(prepared)
+                    for ai_message in ai_messages:
+                        await self.publish_message(ai_message)
             except LifecycleError as exc:
                 await self._send(socket, {"type": "error", "message": str(exc)})
             except SQLAlchemyError:
