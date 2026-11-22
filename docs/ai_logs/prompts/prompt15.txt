@@ -1,0 +1,7 @@
+I've finished the backend foundation and participant joining. I want to start implementing the actual experiment now.
+
+Let's begin with the experiment lifecycle. Based on the existing design documents, implement the backend state machine covering the waiting room, both discussion rounds, voting after each round, and the final results.
+
+The backend should be responsible for controlling phase transitions and validating when the experiment can move to the next phase. Please keep the logic separate from the API layer and add tests for the transitions and invalid states.
+
+Don't implement WebSockets or the frontend yet. Let's get the lifecycle working first.

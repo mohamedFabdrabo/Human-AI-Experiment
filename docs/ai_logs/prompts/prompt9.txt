@@ -1,0 +1,10 @@
+Start the implementation of the project.
+First, Inspect the docs/design directory and stick to them and never introduce unnecessary features and don't redesign things.
+
+Build the initial project skeleton, with backend (Fast API), frontend (React + Vite), database (Postgresql) and docker compose.
+
+No logic shall be implemented yet, I want to verify and ensure that the project can be run from the docker compose build successfully, the frontend should be accessible from the browser and has a docker file, the backend returns a health check end point with a simple json response and also a docker file. The database has no enteties yet, just a configured storage through a docker volume and a health check.
+
+the compose file should start the frontend, backend and the database together.
+the backend should awaits for the database to be healthy, the app should be runnable with docker build command
+

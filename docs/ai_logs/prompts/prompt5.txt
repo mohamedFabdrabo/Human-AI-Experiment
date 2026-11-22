@@ -1,0 +1,14 @@
+Based on the approved Implementation Blueprint and database design, define the minimal communication contract between React and FastAPI. I will be using websocket for realtime session messages.
+
+I need:
+
+1. REST API endpoint request and response examples.
+2. WebSocket connection format.
+3. WebSocket client-to-server events.
+4. WebSocket server-to-client events.
+5. Example JSON payloads for each event.
+6. How participant identity is associated with a WebSocket connection without exposing human/AI types.
+
+Keep the contract minimal and consistent with the four experiment screens.
+
+Do not write code yet and do not introduce additional features. I want also another md. 

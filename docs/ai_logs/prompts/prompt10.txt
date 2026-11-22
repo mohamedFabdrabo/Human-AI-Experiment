@@ -1,0 +1,1 @@
+Standardize config.yml at the repository root, matching the original assessment.

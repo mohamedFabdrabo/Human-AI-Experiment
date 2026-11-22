@@ -1,0 +1,24 @@
+subarashii !
+Now with the frontend, design and architecture.
+This frontend is research oriented and therefore should be minimal, neutral, professional with light theme and blue primary actions.
+
+Design exactly 4 screens,
+- Waiting room
+- Discussion room (chat room)
+- Voting Screen
+- Results Screen
+
+take care of the following:
+- The app is gonna be mostly desktop used.
+- it should be responsive
+- the components should be consistent and reusable
+- NEVER expose whether the participant is AI or human
+- No unnecessary features.
+
+For every screen specify the following:
+- layout and component hirarchy
+- information to be displayed
+- User interactions Loading, waiting and completed state.
+- Specify breifly in the document which API/event it might use.
+
+Don't implement any code yet, and don't introduce additional features.

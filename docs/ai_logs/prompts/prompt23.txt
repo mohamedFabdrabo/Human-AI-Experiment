@@ -1,0 +1,3 @@
+Now let's connect the existing React frontend to the backend. Implement the waiting room, discussion, voting and results screens using the existing API and WebSocket functionality.
+
+Keep the UI simple and consistent with the existing design. Avoid redesigning or refactoring unrelated components. Make sure the complete experiment can be operated through the browser.

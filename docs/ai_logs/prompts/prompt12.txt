@@ -1,0 +1,3 @@
+Now let's implement experiment initialization. On startup, load the configuration and create an experiment with three participant slots (A, B and C). The participant types should remain internal to the backend.
+
+Please add tests for all three configurations.

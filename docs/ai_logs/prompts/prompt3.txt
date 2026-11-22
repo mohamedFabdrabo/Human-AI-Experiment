@@ -1,0 +1,19 @@
+Based on our approved blueprint, design the minimum Postgresql database schema.
+- Use the same 4 enteties we decided on [Experiment, Participant, Message, Vote]
+- Support 3 Participants per experiment.
+- Support two discussions and 2 voting rounds
+- store the participant type internally
+- store messages with their sender, and experiment round.
+- store also, the votes with their voters.
+- prevent duplicate votes by from the same participant in the same round.
+- store the experiments current phase and final decision maker
+
+Provide the following:
+- An ER diagram with mermaid
+- SQL models, relationships conceptually [no code yet]
+- identify the primary keys, foreign keys and unique constraints
+- A small description of each table.
+
+Don't introduce more complications, like authentication or unneeded enteties.
+
+Keep it suitable for the 4 hour time limit.

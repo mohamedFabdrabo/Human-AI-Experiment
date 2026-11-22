@@ -1,0 +1,3 @@
+Verify all required backend logic and APIs, events are implemented and ready for frontend devlopment, 
+WebSocket communication, discussion messages, voting after each round, and basic scripted behavior for AI participants all should be implemented and valid.
+avoid refactoring working code. and don't introduce unwanted abstractions, implement only what is needed for the assessment

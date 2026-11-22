@@ -1,0 +1,2 @@
+why did you change the communication contract here with this comment. Explain your workflow and modules implemented in the backend. I see multiple complications in realtime and lifecycle.py
+

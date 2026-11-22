@@ -1,0 +1,5 @@
+in the database design<
+Add created_at timestamps to the Message entity.
+Add a CHECK constraint restricting player_label to A, B or C.
+
+also, standardize config.yml at the repository root, to match the original assessment.

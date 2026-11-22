@@ -1,0 +1,6 @@
+implement real-time communication using WebSockets.
+
+Participants should be able to connect to the experiment and receive updates whenever the experiment changes phase. They should also receive new discussion messages and the final results.
+
+Please follow the existing communication contract and keep the WebSocket handling separate from the experiment logic. Make sure participants only receive information they're supposed to see, especially regarding human and AI identities.
+Don't work on the frontend yet.

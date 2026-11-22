@@ -1,0 +1,8 @@
+Now let's implement the discussion functionality.
+Read the design docs, don't implement your own decisions, keep the implementation simple and with only basic functionalities implemented, never complicate the code logic unless necessary and give a reason why.
+
+Participants should be able to send messages during the active discussion round, and these messages should be stored in the database and broadcast to everyone in the experiment.
+
+The backend should reject messages outside the discussion phase and associate each message with the correct round and sender. Please also make sure the discussion duration is controlled by the configuration.
+
+Add tests for sending, storing and broadcasting messages, including invalid cases.

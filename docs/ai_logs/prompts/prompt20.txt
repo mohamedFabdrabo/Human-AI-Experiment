@@ -1,0 +1,1 @@
+Don't implement frontend functionality yet, revert what you did and keep only the backend logic

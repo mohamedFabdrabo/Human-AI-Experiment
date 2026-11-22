@@ -1,0 +1,32 @@
+I am developing a technical assessment for a Full-Stack Developer position at the Max Planck Institute.
+
+The project is a Multi-Participant Human-AI Experiment Platform.
+
+I will provide the complete assessment requirements.
+
+Act as a Senior Software Engineer and Business Analyst.
+
+Your task is to analyze the requirements and produce a structured requirements specification.
+
+Do NOT write any code yet.
+
+Please identify:
+
+Functional requirements: Everything the application must do.
+Non-functional requirements: Performance, reliability, anonymity, maintainability, etc.
+Actors: Human participants, AI participants and the backend system.
+Use cases: What each actor can do.
+Business rules: The experiment rules, voting rules, participant assignment and round transitions.
+System states: All possible experiment states and transitions.
+Ambiguities: Requirements that are not explicitly specified and require implementation decisions.
+Acceptance criteria: Concrete conditions that must be satisfied to consider the application functional.
+Important constraints:
+Three participants per experiment.
+Two discussion and voting rounds.
+Three possible configurations: 3 humans, 2 humans + 1 AI, 1 human + 2 AI.
+Human participants must not know whether another participant is human or AI.
+Human participants wait until all required human slots are filled.
+Discussion happens in real time.
+Each participant votes for one of the three candidates.
+Keep the solution scoped to a four-hour implementation effort.
+Present the result in a concise, structured document. Prioritize requirements and distinguish mandatory functionality from optional enhancements.

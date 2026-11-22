@@ -1,0 +1,28 @@
+We've overcomplicated the project.
+
+I want to reset our approach and strictly follow the original Max Planck technical assessment.
+
+The assessment explicitly limits implementation to approximately four hours. Our goal is a small, functional prototype, not a production-ready experimental platform.
+
+Please follow these rules:
+
+1. Do not introduce features that aren't required by the original assessment.
+2. Do not add authentication, multiple simultaneous sessions, advanced reconnection, analytics, admin dashboards or unnecessary infrastructure.
+3. Do not generate additional extensive documentation.
+4. Do not make architectural decisions more complicated than necessary.
+5. Distinguish explicitly between original requirements and our implementation assumptions.
+6. Prefer the simplest implementation that demonstrates the complete experiment flow.
+For now, do not write code.
+
+I want a concise implementation blueprint containing only:
+
+- The four UI screens we need.
+- The main backend responsibilities.
+- The minimum database entities.
+- The experiment lifecycle.
+- The essential REST endpoints and WebSocket events.
+- The minimum Docker services.
+Limit the response to approximately two pages.
+
+If something is not required by the original assessment, leave it out unless it is essential for the application to work.
+I want a generated md file with the results, keep it simple, domain specific and with no extra features that aren't requested.

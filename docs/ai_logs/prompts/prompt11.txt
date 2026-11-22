@@ -1,0 +1,9 @@
+we've finished the initial project setup. Let's start implementing the backend.
+
+Please review the existing design documents and implement the configuration loading and validation for `config.yml`, together with the PostgreSQL database setup using SQLAlchemy.
+
+We need the four entities from our database design: Experiment, Participant, Message and Vote.
+
+Keep the implementation simple and consistent with the existing architecture. Add tests for configuration validation and database models.
+
+Don't implement the experiment flow or WebSockets yet. Let's get this foundation working first.

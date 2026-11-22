@@ -1,0 +1,2 @@
+In the backend design, you wrote, the vote event contains the round number, the backend should know by itself which round it is, which round it is in from the experiment and session info.
+In the state, you didn't define has_voted clearly. It shows null. it should be different for each player, the backend should send every participant an individual state.

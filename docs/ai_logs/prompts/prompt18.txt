@@ -1,0 +1,2 @@
+Seperate the AI logic from lifecycle.py into another file. I shall decide later how the AI should behave and whether I will go with a rule based answering or LLM integration. leave the current implementation of the AI response but take it seperately in another folder.
+For realtime.py, this module have unrequested complications and not well commented and badly readible. add a 1 line docstring to each method to explain what it does. and review the conditions you implemented, don't implement conditions without verifying it from the design docs or review it with me
